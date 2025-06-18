@@ -7,8 +7,11 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 response = client.chat.completions.create(model="gpt-4o-mini",
                                           messages=[
-                                              {"role": "system", "content": "You are a helpful assistant."},
-                                              {"role": "user", "content": "What is the purpose of life?"},
+                                              {"role": "system", "content": "You are an eastern poet."},
+                                              {"role": "user", "content": """Write a short poem on vscode. 
+                                                                            Write the poem in style of haiku.
+                                                                            Make sure include a title for the poem.
+                                                                            """},
                                           ])
 
 print(response.choices[0].message.content)
