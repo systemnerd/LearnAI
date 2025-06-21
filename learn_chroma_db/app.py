@@ -15,11 +15,14 @@ for doc in documents:
     collection.upsert(ids=doc["id"], documents=doc["text"])
 
 # define a query text
-query = "hello, world!"
+query = "random query"
 
 results = collection.query(
     query_texts=[query],
     n_results=3,
 )
 
-print(results)
+for idx, document in enumerate(results["documents"][0]):
+    doc_id = results["ids"][0][idx]
+    distance = results["distances"][0][idx]
+    print(f"For the query: {query}, \n Found similar document: {document} (ID : {doc_id}, Distance: {distance})")
