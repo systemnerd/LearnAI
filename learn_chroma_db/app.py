@@ -1,8 +1,11 @@
 import chromadb
+from chromadb.utils import embedding_functions
+
 chroma_client = chromadb.Client()
+default_ef = embedding_functions.DefaultEmbeddingFunction()
 
 collection_name = "test_collection"
-collection = chroma_client.get_or_create_collection(collection_name)
+collection = chroma_client.get_or_create_collection(collection_name, embedding_function=default_ef)
 
 # define text documents
 documents = [
