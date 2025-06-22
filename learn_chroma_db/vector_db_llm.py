@@ -77,14 +77,42 @@ collection = chroma_client.get_or_create_collection(
 #         embeddings=[doc["embedding"]]
 #     )
 
+def generate_response(question, relevant_chunks):
+    context = "\n\n".join(relevant_chunks)
+    prompt = (
+        "You are an assistant for question-answering tasks. Use the following pieces of "
+        "retrieved context to answer the question. If you don't know the answer, say that you "
+        "don't know. Use three sentences maximum and keep the answer concise."
+        "\n\nContext:\n" + context + "\n\nQuestion:\n" + question
+    )
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role":"system",
+                "content":prompt
+            },
+            {
+                "role":"user",
+                "content":question
+            }
+        ]
+    )
+
+    answer = response.choices[0].message
+    return answer
+
 def query_documents(question, n_results=2):
     results = collection.query(query_texts=question, n_results=n_results)
 
     relevant_chunks = [doc for sublist in results["documents"] for doc in sublist] 
     return relevant_chunks
 
-question = "tell me about databricks acquiring AI"
+question = "tell me about the strike in the company"
 relevant_chunks = query_documents(question)
 
-print(relevant_chunks)
+# print(relevant_chunks)
+answer = generate_response(question, relevant_chunks)
+print(answer.content)
 
