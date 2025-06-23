@@ -1,3 +1,4 @@
+from llama_index.tools.yahoo_finance import YahooFinanceToolSpec
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -22,8 +23,26 @@ workflow = FunctionAgent(
     system_prompt="You are an agent that can perform basic mathematical operations using tools."
 )
 
+# finance agent
+finance_tools = YahooFinanceToolSpec().to_tool_list()
+finance_tools.extend([multiply, add])
+
+finance_workflow = FunctionAgent(
+    name="Agent",
+    description="Useful for performing financial operations.",
+    llm=OpenAI(model="gpt-4o-mini"),
+    tools=finance_tools,
+    system_prompt="You are a helpful assistant."
+)
+
+
 async def main():
     response = await workflow.run(user_msg="What is 20+(2*4)?")
+    print(response)
+
+    response = await finance_workflow.run(
+        user_msg="show me tesla stock price"
+    )
     print(response)
 
 if __name__=="__main__":
