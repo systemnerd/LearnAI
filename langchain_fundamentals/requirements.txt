@@ -5,3 +5,4 @@ chromadb
 streamlit
 dotenv
 langchain_community
+faiss-cpu

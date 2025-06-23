@@ -1,4 +1,5 @@
 from langchain_community.document_loaders import TextLoader
+from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv
@@ -22,4 +23,18 @@ texts = text_splitter.split_documents(documents)
 
 # clean the docs
 texts = [clean_text(text.page_content) for text in texts]
-print(texts)
+# print(texts)
+
+# Load the OpenAI embeddings to vectorize the text
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+
+# create the retriever from the loaded embeddings and documents
+retriever = FAISS.from_texts(texts, embeddings).as_retriever(
+    search_kwargs={"k": 2}
+)
+
+# query the retriever
+query="what was the dream about?"
+docs = retriever.invoke(query)
+
+pprint.pprint(f" => DOCS : {docs}:")
