@@ -38,3 +38,25 @@ query="what was the dream about?"
 docs = retriever.invoke(query)
 
 pprint.pprint(f" => DOCS : {docs}:")
+
+# Chat with the model and our docs
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+
+# create a chat prompt
+prompt = ChatPromptTemplate.from_template(
+    "Please use the following docs {docs}, and answer the following question {query}"
+)
+
+# create a model
+model = ChatOpenAI(model="gpt-4o-mini")
+
+chain = prompt | model | StrOutputParser()
+
+response = chain.invoke({
+    "docs":docs,
+    "query": query
+})
+
+print(f"Model response :: {response}")
