@@ -34,7 +34,8 @@ retriever = FAISS.from_texts(texts, embeddings).as_retriever(
 )
 
 # query the retriever
-query="what was the dream about?"
+# query="what was the dream about?"
+query="Give me summary of the speech in bullet points. Maximum 3 points"
 docs = retriever.invoke(query)
 
 pprint.pprint(f" => DOCS : {docs}:")
