@@ -13,9 +13,13 @@ def clean_text(text):
     text = text.lower()
     return text
 
+# Loading
 documents = TextLoader("./doc/dream.txt").load()
 
-#clean the docs
-cleaned_documents = [clean_text(document.page_content) for document in documents]
+# chunking
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
+texts = text_splitter.split_documents(documents)
 
-print(cleaned_documents)
+# clean the docs
+texts = [clean_text(text.page_content) for text in texts]
+print(texts)
