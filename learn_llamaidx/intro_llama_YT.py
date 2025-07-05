@@ -5,6 +5,7 @@ from llama_index.core import (
                                 StorageContext,
                                 load_index_from_storage
                              )
+from llama_parse import LlamaParse
 
 # check if storage already exists
 PERSIST_DIR = "./storage"
@@ -23,4 +24,12 @@ else:
 query_engine = index.as_query_engine()
 
 response = query_engine.query("explain the third ammendment")
+print(response)
+
+# same thing with llamaparse
+documents = LlamaParse(result_type="text").load_data("./data/appointment/appointment.pdf")
+index = VectorStoreIndex.from_documents(documents)
+query_engine = index.as_query_engine()
+response = query_engine.query("whats the photo service fee?")
+response = query_engine.query("whats appointment time?")
 print(response)
